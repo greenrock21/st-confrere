@@ -20,10 +20,17 @@ def download_link(object_to_download, download_filename, download_link_text):
 
 main_filter = st.sidebar.selectbox('Select Option?', ('Market','Deals','Technicals','Fundamental','Valuation','Commodity','GSec'))
 
+nifty_indices_df = read_dbx_file("/nifty_indices.csv")
+large_deal_df = read_dbx_file("/large_deals.csv")
+technical_trigger_df = read_dbx_file("/technical_trigger.csv")
+global_pe_df = read_dbx_file("/global_pe.csv")
+comm_perf_df = read_dbx_file("/comm_perf.csv")
+global_gsec_df = read_dbx_file("/global_gsec.csv")
+test_df = read_dbx_file("/test.csv")
+
 
 if main_filter == 'Market':    
-    perf_option = st.sidebar.radio('Filter Options', ['1Day Performance', 'Relative Performance'])
-    nifty_indices_df = read_dbx_file("/nifty_indices.csv")
+    perf_option = st.sidebar.radio('Filter Options', ['1Day Performance', 'Relative Performance'])    
     temp_dn = nifty_indices_df.iloc[:,:8].fillna(0)
     if st.button('Download'):
         tmp_download_link = download_link(temp_dn, 'Nifty Indices.csv', 'Click here to download!')
@@ -59,7 +66,8 @@ if main_filter == 'Market':
     else:
         st.dataframe(nifty_indices_df.iloc[:,:8].fillna(0).set_index('name').style.background_gradient(cmap='RdYlGn', axis=0).format("{:,.1f}"), width=800, height=800)
 
-elif main_filter == 'Deals':    
+elif main_filter == 'Deals': 
+
     st.table(large_deal_df.drop(['Script Code', 'Quantity'], axis=1).set_index('Date'))
 elif main_filter == 'Technicals':    
     st.sidebar.write('Filter Options')
